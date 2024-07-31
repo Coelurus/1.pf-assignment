@@ -3,16 +3,21 @@ services:
   frontend:
     build:
       context: "./frontend"
+    environment:
+      SERVER_URL: http://backend:8080/api/
     ports:
-      - "80:80"
+      - 80:80
+    restart: always
+    depends_on:
+      backend:
+        condition: service_healthy
+
   backend:
-    build: 
+    build:
       context: "./backend/"
     restart: always
     ports:
       - "8080:8080"
-    networks:
-      - prvnipf-net
     depends_on:
       - database
     environment:
@@ -20,6 +25,17 @@ services:
       - SPRING_DATASOURCE_USERNAME=user
       - SPRING_DATASOURCE_PASSWORD=heslo
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://backend:8080/api/rates || exit 1"
+        ]
+      timeout: 5s
+      interval: 10s
+      retries: 10
+
   database:
     image: postgres:16.2
     environment:
@@ -27,14 +43,14 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: heslo
     restart: always
-    networks:
-      - prvnipf-net
     volumes:
       - ./database/Rates.sql:/docker-entrypoint-initdb.d/Rates.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -q -h localhost -U user -d 1pf" ]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -q -h localhost -U user -d 1pf"
+        ]
       timeout: 5s
       interval: 10s
       retries: 10
-networks:
-  prvnipf-net:

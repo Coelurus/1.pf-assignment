@@ -10,8 +10,4 @@ server {
   location /api/ {
      proxy_pass $SERVER_URL;
   }
-
-  location /rates/ {
-    rewrite  .*  ../  permanent;
-  }
 }

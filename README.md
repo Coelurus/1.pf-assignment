@@ -5,8 +5,9 @@
 - Ponechán původní design pro vygenerovanou demo Vite aplikaci
 - Mně známý (pro mě zatím neřešitelný bug) - při refreshi na detailu měny -> 404
     - Předpokládám, že způsobeno tím, že je FE single-page
-- Pro spuštění po naklonování repozitáře:
+- Spuštění:
     ```bash
+    git clone https://github.com/Coelurus/1.pf-assignment.git
     cd 1.pf-assignment
     docker build -t 1pf/fr .
     docker run -p 8080:80 1pf/fr

@@ -8,7 +8,7 @@
 - Spuštění:
     ```bash
     git clone https://github.com/Coelurus/1.pf-assignment.git
-    cd 1.pf-assignment
+    cd 1.pf-assignment/frontend
     docker build -t 1pf/fr .
     docker run -p 8080:80 1pf/fr
     ```
